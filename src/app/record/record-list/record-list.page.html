@@ -1,0 +1,52 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="primary">
+			<ion-button (click)="calcStats()">
+				<ion-icon slot="icon-only" name="stats"></ion-icon>
+			</ion-button>
+			<ion-button (click)="sendEmail(records)">
+				<ion-icon slot="icon-only" name="mail"></ion-icon>
+			</ion-button>
+			<ion-button (click)="createRecord()">
+				<ion-icon slot="icon-only" name="add"></ion-icon>
+			</ion-button>
+		</ion-buttons>
+		<!-- <ion-searchbar
+			(ionInput)="doSearch()"
+			(ionClear)="clearSearchbar()"
+			[showCancelButton]="true"
+			(ionCancel)="modalController.dismiss()"
+		>
+		</ion-searchbar> -->
+		<ion-title>Leistungen</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list *ngIf="records.length !== 0; else infoCard">
+		<ion-item-sliding *ngFor="let record of records">
+			<ion-item button (click)="editRecord(record)">
+				{{ record.moduleName }} {{ record.moduleNr }} ({{ record.mark }}%,
+				{{ record.crp }}crp)
+			</ion-item>
+
+			<ion-item-options side="end">
+				<ion-item-option color="danger" (click)="deleteRecord(record)"
+					>Löschen</ion-item-option
+				>
+			</ion-item-options>
+		</ion-item-sliding>
+	</ion-list>
+
+	<ng-template #infoCard>
+		<ion-card>
+			<ion-card-header>
+				<ion-card-subtitle>Keine Leistungen vorhanden.</ion-card-subtitle>
+			</ion-card-header>
+
+			<ion-card-content>
+				<ion-button (click)="createRecord()">JETZT ERSTELLEN</ion-button>
+			</ion-card-content>
+		</ion-card>
+	</ng-template>
+</ion-content>

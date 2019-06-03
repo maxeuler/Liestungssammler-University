@@ -1,0 +1,21 @@
+<ion-header>
+	<ion-searchbar
+		(ionInput)="doSearch()"
+		(ionClear)="clearSearchbar()"
+		[showCancelButton]="true"
+		(ionCancel)="modalController.dismiss()"
+	>
+	</ion-searchbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+		<ion-item
+			button
+			*ngFor="let module of filteredModules"
+			(click)="modalController.dismiss(module)"
+		>
+			{{ module.name }}
+		</ion-item>
+	</ion-list>
+</ion-content>

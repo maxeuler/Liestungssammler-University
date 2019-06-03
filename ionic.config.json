@@ -1,5 +1,7 @@
 {
   "name": "ema-mjel80-u1",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
