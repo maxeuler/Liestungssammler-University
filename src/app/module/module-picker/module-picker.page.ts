@@ -11,6 +11,7 @@ import { Module } from '../module.model';
 export class ModulePickerPage {
 	modules: Module[] = [];
 	filteredModules: Module[] = [];
+	isSearchbarOpen: Boolean;
 
 	@ViewChild(IonSearchbar)
 	private searchbar: IonSearchbar;
@@ -22,9 +23,21 @@ export class ModulePickerPage {
 		this.modules = moduleService.findAll();
 		this.filteredModules = this.modules;
 		this.moduleService.load();
+		this.isSearchbarOpen = false;
 	}
 	ionViewDidEnter() {
-		this.searchbar.setFocus();
+		window.setTimeout(() => {
+			this.searchbar.setFocus();
+		}, 100);
+	}
+
+	toggleSearchbar() {
+		// this.isSearchbarOpen = !this.isSearchbarOpen;
+		// if (this.isSearchbarOpen) {
+		// 	window.setTimeout(() => {
+		// 		this.searchbar.setFocus();
+		// 	}, 100);
+		// }
 	}
 
 	doSearch() {

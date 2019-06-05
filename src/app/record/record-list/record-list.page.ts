@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AlertController, IonSearchbar } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 import { Record } from '../record.model';
 import { Stats } from '../stats.model';
 import { RecordService } from '../record.service';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { filterQueryId } from '@angular/core/src/view/util';
 
 @Component({
 	selector: 'app-record-list',
@@ -14,11 +17,15 @@ import { RecordService } from '../record.service';
 	providers: [SocialSharing]
 })
 export class RecordListPage implements OnInit {
-	records: Record[];
+	records: Record[] = [];
 	statistic: Stats;
 	allertCtrl: AlertController;
 	recordService: RecordService;
 	socialSh: SocialSharing;
+
+	isSearchbarOpen: Boolean;
+	filteredRecords: Record[] = [];
+	myControl = new FormControl();
 
 	count: number;
 	countHalfWeighted: number;
@@ -26,12 +33,33 @@ export class RecordListPage implements OnInit {
 	missingCrp: number;
 	averageGrade: number;
 
+	@ViewChild(IonSearchbar)
+	private searchbar: IonSearchbar;
+
 	constructor(
 		public alertController: AlertController,
 		private router: Router,
 		private socialSharing: SocialSharing
 	) {
 		this.socialSh = new SocialSharing();
+		this.isSearchbarOpen = false;
+	}
+
+	toggleSearchbar() {
+		this.isSearchbarOpen = !this.isSearchbarOpen;
+		if (this.isSearchbarOpen) {
+			window.setTimeout(() => {
+				this.searchbar.setFocus();
+			}, 100);
+		}
+	}
+
+	doSearch() {
+		this.filteredRecords = this.records.filter(
+			rec =>
+				rec.moduleName.toLowerCase().includes(this.searchbar.value) ||
+				rec.moduleNr.toLowerCase().includes(this.searchbar.value)
+		);
 	}
 
 	sendEmail(records: Record[]) {
@@ -66,6 +94,7 @@ export class RecordListPage implements OnInit {
 	fetchRecords() {
 		this.recordService = new RecordService();
 		this.records = this.recordService.findAll();
+		this.filteredRecords = this.records;
 	}
 
 	createRecord() {

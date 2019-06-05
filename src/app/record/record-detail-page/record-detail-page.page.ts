@@ -20,6 +20,7 @@ export class RecordDetailPagePage implements OnInit {
 	years: number[] = [];
 
 	errors: Map<string, string> = new Map<string, string>();
+	selectedModule: any;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -95,9 +96,18 @@ export class RecordDetailPagePage implements OnInit {
 	}
 
 	async showModules() {
-		let mod = this.modalController.create({
-			component: 'ModulePickerPage'
+		const modal = await this.modalController.create({
+			component: ModulePickerPage
 		});
-		this.router.navigate(['module-picker']);
+		await modal.present();
+		this.selectedModule = await modal.onDidDismiss();
+
+		if (this.selectedModule) {
+			const { nr, name, crp } = this.selectedModule.data;
+			console.log(nr, name, crp);
+			this.record.moduleNr = nr;
+			this.record.moduleName = name;
+			this.record.crp = crp;
+		}
 	}
 }

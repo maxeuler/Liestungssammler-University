@@ -1,6 +1,9 @@
 <ion-header>
-	<ion-toolbar>
+	<ion-toolbar *ngIf="!isSearchbarOpen">
 		<ion-buttons slot="primary">
+			<ion-button (click)="toggleSearchbar()">
+				<ion-icon slot="icon-only" name="search"></ion-icon>
+			</ion-button>
 			<ion-button (click)="calcStats()">
 				<ion-icon slot="icon-only" name="stats"></ion-icon>
 			</ion-button>
@@ -11,20 +14,23 @@
 				<ion-icon slot="icon-only" name="add"></ion-icon>
 			</ion-button>
 		</ion-buttons>
-		<!-- <ion-searchbar
-			(ionInput)="doSearch()"
-			(ionClear)="clearSearchbar()"
-			[showCancelButton]="true"
-			(ionCancel)="modalController.dismiss()"
-		>
-		</ion-searchbar> -->
+
 		<ion-title>Leistungen</ion-title>
+	</ion-toolbar>
+	<ion-toolbar *ngIf="isSearchbarOpen">
+		<ion-searchbar
+			(ionInput)="doSearch()"
+			(ionCancel)="toggleSearchbar()"
+			showCancelButton
+			id="seachText"
+		>
+		</ion-searchbar>
 	</ion-toolbar>
 </ion-header>
 
 <ion-content>
-	<ion-list *ngIf="records.length !== 0; else infoCard">
-		<ion-item-sliding *ngFor="let record of records">
+	<ion-list *ngIf="filteredRecords.length !== 0; else infoCard">
+		<ion-item-sliding *ngFor="let record of filteredRecords">
 			<ion-item button (click)="editRecord(record)">
 				{{ record.moduleName }} {{ record.moduleNr }} ({{ record.mark }}%,
 				{{ record.crp }}crp)
